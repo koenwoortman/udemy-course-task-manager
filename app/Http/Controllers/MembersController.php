@@ -27,4 +27,15 @@ class MembersController extends Controller
 
         return new UserCollection($members);
     }
+
+    public function destroy(Request $request, Project $project, int $member)
+    {
+        abort_if($project->creator_id === $member, 400, 'Cannot remove creator from project.');
+
+        $project->members()->detach([$member]);
+
+        $members = $project->members;
+
+        return new UserCollection($members);
+    }
 }
