@@ -35,6 +35,31 @@ class TaskControllerIndexTest extends TestCase
             ]);
     }
 
+    /**
+     * @dataProvider filterFields
+     */
+    public function test_filterable_fields($field, $value, $expectedCode): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $route = route('tasks.index', [
+            "filter[{$field}]" => $value,
+        ]);
+
+        $response = $this->getJson($route);
+        $response->assertStatus($expectedCode);
+    }
+
+    public function filterFields(): array
+    {
+        return [
+            ['id', 1, 400],
+            ['title', 'foo', 400],
+            ['is_done', 1, 200],
+        ];
+    }
+
     public function test_unauthenticated_users_can_not_fetch_tasks(): void
     {
         $route = route('tasks.index');
