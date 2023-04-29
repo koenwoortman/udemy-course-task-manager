@@ -36,6 +36,33 @@ class TaskControllerIndexTest extends TestCase
     }
 
     /**
+     * @dataProvider sortableFields
+     */
+    public function test_sortable_fields($field, $expectedCode): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $route = route('tasks.index', [
+            'sort' => $field,
+        ]);
+
+        $response = $this->getJson($route);
+        $response->assertStatus($expectedCode);
+    }
+
+    public function sortableFields(): array
+    {
+        return [
+            ['id', 400],
+            ['title',  200],
+            ['is_done', 200],
+            ['created_at', 200],
+            ['updated_at', 400],
+        ];
+    }
+
+    /**
      * @dataProvider filterFields
      */
     public function test_filterable_fields($field, $value, $expectedCode): void
