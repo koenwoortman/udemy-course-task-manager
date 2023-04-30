@@ -40,6 +40,16 @@ class Task extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
+    public function scopeScheduledBetween(Builder $query, string $fromDate, string $toDate)
+    {
+        $query->where('scheduled_at', '>=', $fromDate)->where('scheduled_at', '<=', $toDate);
+    }
+
+    public function scopeDueBetween(Builder $query, string $fromDate, string $toDate)
+    {
+        $query->where('due_at', '>=', $fromDate)->where('due_at', '<=', $toDate);
+    }
+
     protected static function booted(): void
     {
         static::addGlobalScope('member', function (Builder $builder) {
