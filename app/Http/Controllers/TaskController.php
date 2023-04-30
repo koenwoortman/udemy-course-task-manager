@@ -28,6 +28,7 @@ class TaskController extends Controller
                 'due_at',
                 AllowedFilter::scope('scheduled_between'),
                 AllowedFilter::scope('due_between'),
+                AllowedFilter::scope('due', null, 'past,today'),
             ])
             ->defaultSort('-created_at')
             ->allowedSorts(['title', 'is_done', 'created_at'])
